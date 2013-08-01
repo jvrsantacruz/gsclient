@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import gs
 import os.path
 import shelve
