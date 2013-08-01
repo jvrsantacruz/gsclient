@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import gs
 import os.path
 import shelve
 
+from . import gs
 
 class Album(object):
     def __init__(self, albumid, artist, title):

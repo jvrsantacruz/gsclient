@@ -3,18 +3,17 @@
 
 import cmd
 import getpass
-import gsclient
 import subprocess
 import sys
 import platform
+
+from .gsclient import ClientWrapper
 
 # Python 3 compatibility
 try:
     from urllib2 import urlopen
 except ImportError:
     from urllib.request import urlopen
-
-version = 0.0
 
 
 def to_int(number):
@@ -23,13 +22,14 @@ def to_int(number):
     except (ValueError, TypeError):
         return
 
+
 class MainCmd(cmd.Cmd):
     intro = 'GS Command Line %s, type "help" or "?" for help' % version
     prompt = 'gscmd> '
 
     def __init__(self):
         cmd.Cmd.__init__(self)
-        self._client = gsclient.ClientWrapper()
+        self._client = ClientWrapper()
         self._more = None
         self._results = None
         self._results_idx = None
@@ -202,5 +202,10 @@ class MainCmd(cmd.Cmd):
         self.do_list(None)
 
 
-if __name__ == '__main__':
+
+def main():
     MainCmd().cmdloop()
+
+
+if __name__ == '__main__':
+    main()
