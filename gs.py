@@ -8,9 +8,11 @@ try:
 except ImportError:
     import urllib.request as urllib2
 
+
 class Request(dict):
     def __init__(self, method):
         self.method = method
+
 
 class ServiceException(Exception):
     def __init__(self, message, code):
@@ -22,6 +24,7 @@ class ServiceException(Exception):
 
     def __str__(self):
         return 'Server returned:%s (code %d)' % (self.message, self.code)
+
 
 class Service(object):
     endpoint_host = "grooveshark.com"
@@ -36,9 +39,11 @@ class Service(object):
         blob['method'] = req.method
         blob['parameters'] = req
         blob['header'] = header
-        request = urllib2.Request('https://%s%s' % (self.endpoint_host, self.endpoint_path),
-                                  data = json.dumps(blob).encode('utf-8'),
-                                  headers = { 'Content-Type': 'application/json' })
+        request = urllib2.Request(
+            'https://%s%s' % (self.endpoint_host, self.endpoint_path),
+            data=json.dumps(blob).encode('utf-8'),
+            headers={'Content-Type': 'application/json'}
+        )
         response = urllib2.urlopen(request).read()
         response = response.decode('utf-8')
         try:
@@ -53,6 +58,7 @@ class Service(object):
             raise ServiceException(data['fault']['message'],
                                    data['fault']['code'])
         raise Exception("We sent a bad request")
+
 
 class Client(object):
     def __init__(self, service):
@@ -87,6 +93,7 @@ class Client(object):
         #                               self._last_salt))
         return "%06x%s" % (self._last_salt, sha1.hexdigest())
 
+
 class WebClient(Client):
     client_name = 'htmlshark'
     client_rev = '20120312'
@@ -120,7 +127,7 @@ class WebClient(Client):
         else:
             raise Exception("Invalid username or password")
 
-    def get_favorites(self, what, user_id = None):
+    def get_favorites(self, what, user_id=None):
         if not user_id:
             if self.user_id:
                 user_id = self.user_id
@@ -131,7 +138,7 @@ class WebClient(Client):
         req['ofWhat'] = what
         return self._send(req)
 
-    def get_album_songs(self, album_id = None, verified=False):
+    def get_album_songs(self, album_id=None, verified=False):
         if not album_id:
             raise Exception('Must have album_id')
         req = Request('albumGetSongs')
@@ -140,7 +147,7 @@ class WebClient(Client):
         req['offset'] = 0
         return self._send(req)
 
-    def get_artist_songs(self, artist_id = None, verified=False):
+    def get_artist_songs(self, artist_id=None, verified=False):
         if not artist_id:
             raise Exception('Must have artist_id')
         req = Request('artistGetSongs')
@@ -149,7 +156,7 @@ class WebClient(Client):
         req['offset'] = 0
         return self._send(req)
 
-    def get_playlists(self, user_id = None):
+    def get_playlists(self, user_id=None):
         if not user_id:
             if self.user_id:
                 user_id = self.user_id
@@ -159,7 +166,7 @@ class WebClient(Client):
         req['userID'] = user_id
         return self._send(req)
 
-    def get_playlist_songs(self, playlist_id = None):
+    def get_playlist_songs(self, playlist_id=None):
         if not playlist_id:
             raise Exception('Must have playlist_id')
         req = Request('playlistGetSongs')
@@ -171,7 +178,8 @@ class WebClient(Client):
         req['query'] = query
         req['type'] = what
         return self._send(req)
-        
+
+
 class PlayerClient(Client):
     client_name = 'jsqueue'
     client_rev = '20120312'

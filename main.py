@@ -14,10 +14,12 @@ except ImportError:
 
 version = 0.0
 
+
 def tr(s, l):
     if len(s) < l:
         return s
-    return s[0:l-3] + '...'
+    return s[0:l - 3] + '...'
+
 
 class MainCmd(cmd.Cmd):
     intro = 'GS Command Line %s, type "help" or "?" for help' % version
@@ -38,9 +40,12 @@ class MainCmd(cmd.Cmd):
         print()
         sys.exit(0)
 
+    def _user_input(self, message, positive=('y', 'yes')):
+        return input(message) in positive
+
     def _select_album(self, album):
         self._more = self._show_songs
-        verified = input("Show only verified songs in this album?: ") in ('y','yes')
+        verified = self._user_input("Show only verified songs in this album?: ")
         self._results = self._client.get_album_songs(album, verified)
         self._results_idx = 0
         self._select = self._select_song
@@ -64,7 +69,7 @@ class MainCmd(cmd.Cmd):
 
     def _select_artist(self, artist):
         self._more = self._show_songs
-        verified = input("Show only verified songs in this artist?: ") in ('y','yes')
+        verified = self._user_input("Show only verified songs in this artist?: ")
         self._results = self._client.get_artist_songs(artist, verified)
         self._results_idx = 0
         self._select = self._select_song
@@ -149,11 +154,11 @@ class MainCmd(cmd.Cmd):
 
     def _select_song(self, song):
         (url, postdata) = self._client.get_stream(song)
-        stream = urlopen(url, data = postdata.encode('utf-8'))
+        stream = urlopen(url, data=postdata.encode('utf-8'))
         command = ['mplayer', '-cache', '2048', '-']
         if (self._os == 'mac'):
             command = ['mpg123', '-']
-        subprocess.call(command, stdin = stream)
+        subprocess.call(command, stdin=stream)
 
     def _show_songs(self, songs):
         i = self._results_idx + 1
@@ -179,6 +184,7 @@ class MainCmd(cmd.Cmd):
         self._results_idx = 0
         self._select = self._select_song
         self.do_more(None)
+
 
 if __name__ == '__main__':
     MainCmd().cmdloop()

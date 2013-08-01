@@ -2,16 +2,19 @@ import gs
 import os.path
 import shelve
 
+
 class Album(object):
     def __init__(self, albumid, artist, title):
         self._id = albumid
         self.artist = artist
         self.title = title
 
+
 class Artist(object):
     def __init__(self, artistid, name):
         self._id = artistid
         self.name = name
+
 
 class Song(object):
     def __init__(self, songid, album, artist, track, title):
@@ -21,14 +24,16 @@ class Song(object):
         self.track = track
         self.title = title
 
+
 class Playlist(object):
     def __init__(self, uuid, name, description):
         self._id = uuid
         self.name = name
         self.description = description
 
+
 class ClientWrapper(object):
-    def __init__(self, config = '~/.pygsclient'):
+    def __init__(self, config='~/.pygsclient'):
         self._service = gs.Service()
         self._web = gs.WebClient(self._service)
         self._player = gs.PlayerClient(self._service)
@@ -48,12 +53,12 @@ class ClientWrapper(object):
             del self._shelf['user_id']
 
     def _munge_playlist(self, p):
-        return Playlist(uuid = p['PlaylistID'],
-                        name = p['Name'],
-                        description = p.get('About',''))
+        return Playlist(uuid=p['PlaylistID'],
+                        name=p['Name'],
+                        description=p.get('About', ''))
 
     def get_favorite_songs(self, user_id=None):
-        raw_result = self._web.get_favorites('Songs',user_id=user_id)
+        raw_result = self._web.get_favorites('Songs', user_id=user_id)
         return [self._munge_song(s) for s in raw_result]
 
     def get_playlists(self):
@@ -91,28 +96,28 @@ class ClientWrapper(object):
         self._clear_user_id()
 
     def _munge_album(self, a):
-        return Album(albumid = a['AlbumID'],
-                     artist = self._munge_artist(a),
-                     title = a['AlbumName'])
+        return Album(albumid=a['AlbumID'],
+                     artist=self._munge_artist(a),
+                     title=a['AlbumName'])
 
     def search_album(self, query):
         raw_result = self._web.search(query, 'Albums')['result']
         return [self._munge_album(s) for s in raw_result]
 
     def _munge_artist(self, a):
-        return Artist(artistid = a['ArtistID'],
-                      name = a['ArtistName'])
+        return Artist(artistid=a['ArtistID'],
+                      name=a['ArtistName'])
 
     def search_artist(self, query):
         raw_result = self._web.search(query, 'Artists')['result']
         return [self._munge_artist(s) for s in raw_result]
 
     def _munge_song(self, s):
-        return Song(songid = s['SongID'],
-                    album = self._munge_album(s),
-                    artist = self._munge_artist(s),
-                    track = s['TrackNum'],
-                    title = s.get('SongName',s.get('Name')))
+        return Song(songid=s['SongID'],
+                    album=self._munge_album(s),
+                    artist=self._munge_artist(s),
+                    track=s['TrackNum'],
+                    title=s.get('SongName', s.get('Name')))
 
     def search_song(self, query):
         raw_result = self._web.search(query, 'Songs')['result']
