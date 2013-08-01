@@ -17,12 +17,6 @@ except ImportError:
 version = 0.0
 
 
-def tr(s, l):
-    if len(s) < l:
-        return s
-    return s[0:l - 3] + '...'
-
-
 class MainCmd(cmd.Cmd):
     intro = 'GS Command Line %s, type "help" or "?" for help' % version
     prompt = 'gscmd> '
