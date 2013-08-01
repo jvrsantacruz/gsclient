@@ -112,25 +112,13 @@ class MainCmd(cmd.Cmd):
 
     def do_less(self, rest):
         """Show previous result list."""
-        if self._more:
-            if self._results:
-                self._results_idx = self._results_idx - 30 if self._results_idx > 30 else 0
-                self._more(self._results[self._results_idx:self._results_idx + 30])
-            else:
-                print("No more search results.")
-        else:
-            print("No search results.")
+        self._results_idx = self._results_idx - 30 if self._results_idx > 30 else 0
+        self.do_list(rest)
 
     def do_more(self, rest):
         """Show more search results."""
-        if self._more:
-            if self._results_idx < len(self._results):
-                self._results_idx += 30
-                self._more(self._results[self._results_idx:self._results_idx + 30])
-            else:
-                print("No more search results.")
-        else:
-            print("No search results.")
+        self._results_idx += 30
+        self.do_list(rest)
 
     def _select_playlist(self, pl):
         self._more = self._show_songs
