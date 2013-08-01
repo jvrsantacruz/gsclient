@@ -27,7 +27,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'gsclient = gsclient.main:main'
+            'gsclient = gsclient.cli:main'
         ]
     },
     classifiers=(
