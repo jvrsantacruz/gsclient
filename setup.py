@@ -7,12 +7,12 @@ except ImportError:
     from distutils.core import setup
 
 
-from gsclient.main import version
+import gsclient
 
 
 setup(
     name='gsclient',
-    version=version,
+    version=gsclient.__version__,
     description='GrooveShark audio streaming client',
     long_description=open('README').read(),
     author='Andrew Drake',

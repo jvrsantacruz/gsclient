@@ -13,8 +13,6 @@ try:
 except ImportError:
     from urllib.request import urlopen
 
-version = 0.0
-
 def tr(s, l):
     if len(s) < l:
         return s
