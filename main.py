@@ -19,6 +19,12 @@ def tr(s, l):
         return s
     return s[0:l-3] + '...'
 
+def to_int(number):
+    try:
+        return int(number)
+    except (ValueError, TypeError):
+        return
+
 class MainCmd(cmd.Cmd):
     intro = 'GS Command Line %s, type "help" or "?" for help' % version
     prompt = 'gscmd> '
@@ -102,22 +108,27 @@ class MainCmd(cmd.Cmd):
 
     def do_list(self, rest):
         """Show current result list."""
-        if self._more:
-            if self._results:
-                self._more(self._results[self._results_idx:self._results_idx + 30])
-            else:
-                print("No more search results.")
-        else:
+        if not self._more:
             print("No search results.")
+            return
+
+        if not self._results:
+            print("No more search results.")
+            return
+
+        offset = to_int(rest) or 30
+        self._more(self._results[self._results_idx:self._results_idx + offset])
 
     def do_less(self, rest):
         """Show previous result list."""
-        self._results_idx = self._results_idx - 30 if self._results_idx > 30 else 0
+        offset = to_int(rest) or 30
+        self._results_idx = self._results_idx - offset if self._results_idx > offset else 0
         self.do_list(rest)
 
     def do_more(self, rest):
         """Show more search results."""
-        self._results_idx += 30
+        offset = to_int(rest) or 30
+        self._results_idx += offset
         self.do_list(rest)
 
     def _select_playlist(self, pl):
