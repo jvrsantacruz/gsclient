@@ -181,5 +181,10 @@ class MainCmd(cmd.Cmd):
         self._select = self._select_song
         self.do_more(None)
 
-if __name__ == '__main__':
+
+def main():
     MainCmd().cmdloop()
+
+
+if __name__ == '__main__':
+    main()

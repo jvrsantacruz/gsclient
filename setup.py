@@ -25,6 +25,11 @@ setup(
     packages=[
         'gsclient'
     ],
+    entry_points={
+        'console_scripts': [
+            'gsclient = gsclient.main:main'
+        ]
+    },
     classifiers=(
         'Development Status :: 4 - Beta',
         'Environment :: Console',
