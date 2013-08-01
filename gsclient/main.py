@@ -5,7 +5,7 @@ import subprocess
 import sys
 import platform
 
-from gsclient import ClientWrapper
+from .gsclient import ClientWrapper
 
 # Python 3 compatibility
 try:
