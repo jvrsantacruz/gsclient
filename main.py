@@ -44,7 +44,7 @@ class MainCmd(cmd.Cmd):
         self._results = self._client.get_album_songs(album, verified)
         self._results_idx = 0
         self._select = self._select_song
-        self.do_more(None)
+        self.do_list(None)
 
     def _show_albums(self, albums):
         i = self._results_idx + 1
@@ -60,7 +60,7 @@ class MainCmd(cmd.Cmd):
         self._results = self._client.search_album(rest)
         self._results_idx = 0
         self._select = self._select_album
-        self.do_more(None)
+        self.do_list(None)
 
     def _select_artist(self, artist):
         self._more = self._show_songs
@@ -68,7 +68,7 @@ class MainCmd(cmd.Cmd):
         self._results = self._client.get_artist_songs(artist, verified)
         self._results_idx = 0
         self._select = self._select_song
-        self.do_more(None)
+        self.do_list(None)
 
     def _show_artists(self, artists):
         i = self._results_idx + 1
@@ -82,7 +82,7 @@ class MainCmd(cmd.Cmd):
         self._results = self._client.search_artist(rest)
         self._results_idx = 0
         self._select = self._select_artist
-        self.do_more(None)
+        self.do_list(None)
 
     def do_login(self, rest):
         """Log in (prompts for username and password)."""
@@ -100,12 +100,33 @@ class MainCmd(cmd.Cmd):
     def do_quit(self, rest):
         sys.exit(0)
 
+    def do_list(self, rest):
+        """Show current result list."""
+        if self._more:
+            if self._results:
+                self._more(self._results[self._results_idx:self._results_idx + 30])
+            else:
+                print("No more search results.")
+        else:
+            print("No search results.")
+
+    def do_less(self, rest):
+        """Show previous result list."""
+        if self._more:
+            if self._results:
+                self._results_idx = self._results_idx - 30 if self._results_idx > 30 else 0
+                self._more(self._results[self._results_idx:self._results_idx + 30])
+            else:
+                print("No more search results.")
+        else:
+            print("No search results.")
+
     def do_more(self, rest):
         """Show more search results."""
         if self._more:
             if self._results_idx < len(self._results):
-                self._more(self._results[self._results_idx:self._results_idx + 30])
                 self._results_idx += 30
+                self._more(self._results[self._results_idx:self._results_idx + 30])
             else:
                 print("No more search results.")
         else:
@@ -116,7 +137,7 @@ class MainCmd(cmd.Cmd):
         self._results = self._client.get_playlist_songs(pl)
         self._results_idx = 0
         self._select = self._select_song
-        self.do_more(None)
+        self.do_list(None)
 
     def _show_playlists(self, pls):
         i = self._results_idx + 1
@@ -130,7 +151,7 @@ class MainCmd(cmd.Cmd):
         self._results = self._client.get_playlists()
         self._results_idx = 0
         self._select = self._select_playlist
-        self.do_more(None)
+        self.do_list(None)
 
     def do_select(self, rest):
         """Select the given index from the last search results."""
@@ -170,7 +191,7 @@ class MainCmd(cmd.Cmd):
         self._results = self._client.get_favorite_songs()
         self._results_idx = 0
         self._select = self._select_song
-        self.do_more(None)
+        self.do_list(None)
 
     def do_song(self, rest):
         """Search for songs with the given title."""
@@ -178,7 +199,7 @@ class MainCmd(cmd.Cmd):
         self._results = self._client.search_song(rest)
         self._results_idx = 0
         self._select = self._select_song
-        self.do_more(None)
+        self.do_list(None)
 
 if __name__ == '__main__':
     MainCmd().cmdloop()
