@@ -61,7 +61,11 @@ class MainCmd(cmd.Cmd):
             i += 1
 
     def do_album(self, rest):
-        """Search for albums with the given title."""
+        """Search for albums with the given title.
+
+Parameters:
+    <title>  Title of the album to search
+        """
         self._more = self._show_albums
         self._results = self._client.search_album(rest)
         self._results_idx = 0
@@ -83,7 +87,11 @@ class MainCmd(cmd.Cmd):
             i += 1
 
     def do_artist(self, rest):
-        """Search for artists with the given name."""
+        """Search for artists with the given name.
+
+Parameters:
+    <name>  Name of the artist to search
+        """
         self._more = self._show_artists
         self._results = self._client.search_artist(rest)
         self._results_idx = 0
@@ -107,7 +115,11 @@ class MainCmd(cmd.Cmd):
         sys.exit(0)
 
     def do_list(self, rest):
-        """Show current result list."""
+        """Show current result list
+
+Parameters:
+    <limit>  Max number of items (optional) (default: 30)
+        """
         if not self._more:
             print("No search results.")
             return
@@ -120,13 +132,21 @@ class MainCmd(cmd.Cmd):
         self._more(self._results[self._results_idx:self._results_idx + offset])
 
     def do_less(self, rest):
-        """Show previous result list."""
+        """Show previous result list.
+
+Parameters:
+    <limit>  Max number of items (optional) (default: 30)
+        """
         offset = to_int(rest) or 30
         self._results_idx = self._results_idx - offset if self._results_idx > offset else 0
         self.do_list(rest)
 
     def do_more(self, rest):
-        """Show more search results."""
+        """Show more search results.
+
+Parameters:
+    <limit>  Max number of items (optional) (default: 30)
+        """
         offset = to_int(rest) or 30
         self._results_idx += offset
         self.do_list(rest)
@@ -153,7 +173,11 @@ class MainCmd(cmd.Cmd):
         self.do_list(None)
 
     def do_select(self, rest):
-        """Select the given index from the last search results."""
+        """Select the given index from the last search results.
+
+Parameters:
+    <index>  Index for the selected item
+        """
         try:
             index = int(rest.strip().rstrip())
         except ValueError:
@@ -193,12 +217,17 @@ class MainCmd(cmd.Cmd):
         self.do_list(None)
 
     def do_song(self, rest):
-        """Search for songs with the given title."""
+        """Search for songs with the given title.
+
+Parameters:
+    <title>  Title of the song to search
+        """
         self._more = self._show_songs
         self._results = self._client.search_song(rest)
         self._results_idx = 0
         self._select = self._select_song
         self.do_list(None)
+
 
 if __name__ == '__main__':
     MainCmd().cmdloop()
