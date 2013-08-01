@@ -171,7 +171,7 @@ class WebClient(Client):
         req['query'] = query
         req['type'] = what
         return self._send(req)
-        
+
 class PlayerClient(Client):
     client_name = 'jsqueue'
     client_rev = '20120312'

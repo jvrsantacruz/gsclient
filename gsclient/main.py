@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import cmd
 import getpass
-import gsclient
 import subprocess
 import sys
 import platform
+
+from gsclient import ClientWrapper
 
 # Python 3 compatibility
 try:
@@ -25,7 +26,7 @@ class MainCmd(cmd.Cmd):
 
     def __init__(self):
         cmd.Cmd.__init__(self)
-        self._client = gsclient.ClientWrapper()
+        self._client = ClientWrapper()
         self._more = None
         self._results = None
         self._results_idx = None
