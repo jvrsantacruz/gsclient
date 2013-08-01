@@ -7,6 +7,7 @@ import subprocess
 import sys
 import platform
 
+from . import __version__
 from .gsclient import ClientWrapper
 
 # Python 3 compatibility
@@ -24,7 +25,7 @@ def to_int(number):
 
 
 class MainCmd(cmd.Cmd):
-    intro = 'GS Command Line %s, type "help" or "?" for help' % version
+    intro = 'GS Command Line %s, type "help" or "?" for help' % __version__
     prompt = 'gscmd> '
 
     def __init__(self):
